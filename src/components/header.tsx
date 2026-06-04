@@ -49,7 +49,7 @@ export default function Header() {
           <Button variant="ghost" asChild>
             <Link href="/">Se connecter</Link>
           </Button>
-          <Button asChild>
+          <Button asChild className="hidden md:inline-flex">
             <Link href="/">Créer un événement</Link>
           </Button>
           <Avatar>
