@@ -18,6 +18,7 @@ import {
   Calendar1,
   ChevronLeft,
   ChevronRight,
+  HeartIcon,
   MapPin,
   Search,
 } from "lucide-react";
@@ -32,12 +33,12 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Slider } from "@/components/ui/slider";
 import {
   Card,
-  CardAction,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import FooterClient from "@/components/footer";
 
 interface mockdata {
   categorie: string;
@@ -73,6 +74,7 @@ function Page() {
       title: "Sonic Horizon: Global Tour 2024",
       date: new Date(),
       lieu: "Paris",
+      price: 150,
     },
     //continuer le mockdata
     {
@@ -102,6 +104,35 @@ function Page() {
       date: new Date(new Date().setDate(new Date().getDate() + 7)),
       lieu: "Nice",
       price: 60,
+    },
+    //continue again,also add free price
+    {
+      categorie: "Business",
+      title: "Networking Startup Night",
+      date: new Date(new Date().setDate(new Date().getDate() + 3)),
+      lieu: "Toulouse",
+      price: 0,
+    },
+    {
+      categorie: "Concerts",
+      title: "Electro Garden Party",
+      date: new Date(new Date().setDate(new Date().getDate() + 10)),
+      lieu: "Montpellier",
+      price: 35,
+    },
+    {
+      categorie: "Workshop",
+      title: "Introduction à la Poterie",
+      date: new Date(new Date().setDate(new Date().getDate() + 4)),
+      lieu: "Nantes",
+      price: 0,
+    },
+    {
+      categorie: "Business",
+      title: "Conférence IA & Futur",
+      date: new Date(new Date().setDate(new Date().getDate() + 15)),
+      lieu: "Lille",
+      price: 85,
     },
   ];
   return (
@@ -343,24 +374,31 @@ function Page() {
                   </div>
                 </div>
               </header>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
                 {mockDataEvent.map((item, index) => (
                   <Card
                     key={`${item.title}-${index}`}
-                    className="relative mx-auto w-full max-w-sm pt-0"
+                    className="relative w-full pt-0"
                   >
-                    <div className="absolute inset-0 z-30 aspect-video bg-black/35" />
+                    <div className=" absolute z-30 top-2.5 left-1.5 right-1  flex justify-between items-center">
+                      <p className="p-1 bg-white uppercase text-xs rounded text-primary">
+                        {item.categorie}
+                      </p>
+                      <HeartIcon className="h-6 w-6 bg-white rounded-full p-1 cursor-pointer" />
+                    </div>
+                    {/* <div className="absolute inset-0 z-30 aspect-video bg-black/35" /> */}
                     <Image
                       src="https://avatar.vercel.sh/shadcn1"
                       alt="Event cover"
                       width={640}
-                      height={360}
-                      className="relative z-20 w-full aspect-video object-cover brightness-60 grayscale dark:brightness-40"
+                      height={560}
+                      className="relative z-20 h-40  w-full aspect-video object-cover brightness-60 grayscale dark:brightness-40"
                     />
+
                     <CardHeader>
-                      <CardAction>
+                      {/* <CardAction>
                         <Badge variant="secondary">Featured</Badge>
-                      </CardAction>
+                      </CardAction> */}
                       <CardTitle className="flex items-center gap-2 text-primary">
                         <Calendar1></Calendar1>
                         <p className="text-sm">
@@ -390,6 +428,9 @@ function Page() {
           </div>
         </div>
       </section>
+
+      {/*footer is here */}
+      <FooterClient />
     </div>
   );
 }
