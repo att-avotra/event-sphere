@@ -15,6 +15,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import FooterClient from "@/components/footer";
 
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 function CalendarPage() {
   {
     /* mock data comment  */
@@ -251,7 +261,7 @@ function CalendarPage() {
             {/* right section */}
           </div>
           {/* right section  */}
-          <div className="flex flex-col  gap-4 bg-white w-1/4 p-2 shadow rounded">
+          <div className="flex flex-col max-h-100 gap-6 bg-white w-1/4 p-2 shadow rounded-xl">
             <header className="flex justify-between items-center">
               <p className="text-primary">$10.96</p>
               <p className="text-muted-foreground">Standard entry</p>
@@ -260,9 +270,13 @@ function CalendarPage() {
               Price includes all-day sessions, networking lunch, and exclusive
               digital resources.
             </p>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col w-full gap-3">
               <div className="flex-1">
-                <p className="text-muted-foregroud">42 spot left</p>
+                <div className="flex justify-between">
+                  <p className="text-muted-foregroud">42 spot left</p>
+
+                  <p className="text-muted-foreground">70% filled</p>
+                </div>
                 <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
                   <div
                     className="bg-primary h-2 rounded-full"
@@ -270,10 +284,62 @@ function CalendarPage() {
                   ></div>
                 </div>
               </div>
-              <Button className="w-full">Get Tickets</Button>
-              <Button variant="outline" className="w-full">
-                Add to Calendar
-              </Button>
+              <Select>
+                <SelectTrigger className="w-full bg-[#F2F3FF] cursor-pointer">
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Ticket</SelectLabel>
+                    {Array.from({ length: 10 }).map((_, index) => (
+                      <SelectItem
+                        key={index}
+                        value={index.toString()}
+                        className="cursor-pointer"
+                      >
+                        {index + 1} Ticket
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Button className="w-full">Register for events</Button>
+              <p className="text-center text-muted-foreground text-sm">
+                No hidden fees. Refundable up to 7 days before event.
+              </p>
+            </div>
+
+            {/* already attendign images */}
+            <div className="flex flex-col gap-2">
+              <p className="text-sm text-left">Already attending</p>
+
+              <div className="flex items-center -space-x-3">
+                <Avatar className="h-8 w-8 ring-2 ring-white">
+                  <AvatarImage
+                    src="https://randomuser.me/api/portraits/men/32.jpg"
+                    alt="Attendee 1"
+                  />
+                  <AvatarFallback>AJ</AvatarFallback>
+                </Avatar>
+                <Avatar className="h-8 w-8 ring-2 ring-white">
+                  <AvatarImage
+                    src="https://randomuser.me/api/portraits/women/44.jpg"
+                    alt="Attendee 2"
+                  />
+                  <AvatarFallback>SW</AvatarFallback>
+                </Avatar>
+                <Avatar className="h-8 w-8 ring-2 ring-white">
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    alt="Attendee 3"
+                  />
+                  <AvatarFallback>MC</AvatarFallback>
+                </Avatar>
+
+                <span className="text-xs text-muted-foreground ml-3">
+                  +128 going
+                </span>
+              </div>
             </div>
           </div>
         </div>
