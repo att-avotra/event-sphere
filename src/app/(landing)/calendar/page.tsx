@@ -7,11 +7,55 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Calendar1 } from "lucide-react";
+import { Calendar1, MapPin, Timer } from "lucide-react";
+import { Avatar } from "@/components/ui/avatar";
+
+import { AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import FooterClient from "@/components/footer";
 
 function CalendarPage() {
+  {
+    /* mock data comment  */
+  }
+  const comments = [
+    {
+      id: 1,
+      name: "Alex Johnson",
+      avatar: "https://github.com/shadcn.png",
+      date: "2 days ago",
+      text: "Can't wait for the keynote! The lineup looks incredible this year.",
+      replies: [
+        {
+          id: 101,
+          name: "Organizer",
+          avatar: "https://github.com/shadcn.png",
+          date: "1 day ago",
+          text: "We're excited to have you! The schedule is fully packed with surprises.",
+        },
+      ],
+    },
+    {
+      id: 2,
+      name: "Sarah Williams",
+      avatar: "https://github.com/shadcn.png",
+      date: "5 hours ago",
+      text: "Does anyone know if there will be a shuttle from the downtown station?",
+      replies: [],
+    },
+    {
+      id: 3,
+      name: "Michael Chen",
+      avatar: "https://github.com/shadcn.png",
+      date: "1 hour ago",
+      text: "I'm looking forward to the networking sessions. See you all there!",
+      replies: [],
+    },
+  ];
+
   return (
-    <div className="flex flex-col min-h-screen overflow-x-hidden bg-[#FAF8FF">
+    <div className="flex flex-col min-h-screen overflow-x-hidden bg-[#FAF8FF]">
       <section
         className="flex flex-col  items-center px-6 py-12
       "
@@ -48,11 +92,11 @@ function CalendarPage() {
         </div>
       </section>
 
-      <section className="flex flex-col  items-center px-6 h-screen">
-        <div className="flex flex-row items-center text-center w-full max-w-7xl">
+      <section className="flex flex-col  items-center px-6 py-12 mb-14">
+        <div className="flex flex-row gap-3 text-center w-full max-w-7xl">
           {/* left section */}
-          <div className="flex flex-col items-center text-center">
-            <div className="flex justify-between items-center w-full">
+          <div className="flex flex-col  gap-4 w-3/4">
+            <div className="flex justify-between text-center w items-center w-full">
               <Card size="sm" className="mx-auto w-48 max-w-sm">
                 <CardHeader className="flex flex-row items-center justify-between">
                   <Calendar1 className="h-5 w-5 text-primary" />
@@ -62,10 +106,180 @@ function CalendarPage() {
                   </div>
                 </CardHeader>
               </Card>
+              <Card size="sm" className="mx-auto w-48 max-w-sm">
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <Timer className="h-5 w-5 text-primary" />
+                  <div className="flex items-start flex-col">
+                    <CardTitle className="uppercase">Time</CardTitle>
+                    <CardDescription> 10:00 PM - 4:00 AM</CardDescription>
+                  </div>
+                </CardHeader>
+              </Card>
+              <Card size="sm" className="mx-auto w-48 max-w-sm">
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <MapPin className="h-5 w-5 text-primary" />
+                  <div className="flex items-start flex-col">
+                    <CardTitle className="uppercase">LOCATION</CardTitle>
+                    <CardDescription>San Francisco, CA</CardDescription>
+                  </div>
+                </CardHeader>
+              </Card>
+            </div>
+            {/*Aboout  */}
+            <div className="flex flex-col text-left w-full gap-4 px-2">
+              <p className="text-xl font-bold">A propos de cet évennement</p>
+              <p className="text-sm text-muted-foreground">
+                Join us for an immersive day of exploration where the brightest
+                minds in technology and design converge. The Future Tech Summit
+                2024 is designed to challenge your perceptions of artificial
+                intelligence and explore its role as a partner in human
+                creativity.
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Our keynote speakers will delve into the ethics of generative
+                AI, the future of the decentralized web, and the next frontier
+                of human-computer interaction. Whether you&apos;re a developer,
+                a designer, or a tech enthusiast, this summit offers a unique
+                opportunity to network with industry leaders and gain hands-on
+                experience with emerging tools.
+              </p>
+            </div>
+            <div className="bg-blue-100 w-full text-blue-700 dark:bg-blue-950 dark:text-blue-300 p-3 italic text-sm rounded-xl border-l-2 border-blue-800 ">
+              <p className="">
+                &quot;Technology is most powerful when it empowers us to do
+                things we never thought possible.&quot; — Dr. Sarah Chen,
+                Keynote Speaker
+              </p>
+            </div>
+            {/* Map */}
+            <div className="flex flex-col text-left w-full gap-4 px-2">
+              <p className="text-xl font-bold">Map</p>
+              <div className="w-full h-48 rounded-lg ">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.086769195061!2d-122.41941508468193!3d37.77492977975959!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085809c5b8c6e7b%3A0x7e5c5b5e5c5b5e5c!2sSan%20Francisco%2C%20CA%2C%20USA!5e0!3m2!1sen!2sfr!4v1697040000000"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </div>
+              {/* Discussionn */}
+              <div className="flex flex-col text-left w-full gap-4 px-2">
+                <p className="text-xl font-bold">Discussion</p>
+                <div className="flex items-start gap-2 w-full">
+                  <Avatar>
+                    <AvatarImage
+                      src="https://github.com/shadcn1.png"
+                      alt="@shadcn"
+                      className="grayscale"
+                    />
+                    <AvatarFallback>JN</AvatarFallback>
+                  </Avatar>
+                  <div className="w-full flex flex-col items-end gap-2">
+                    <Textarea placeholder="Type your message here." />
+                    <Button className=" px-4 py-2">Post</Button>
+                  </div>
+                </div>
+
+                {/* Liste des commentaires */}
+                <div className="mt-8 flex flex-col gap-6 w-full">
+                  {comments.map((comment) => (
+                    <div key={comment.id} className="flex flex-col gap-4">
+                      <div className="flex items-start gap-3">
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage
+                            src={comment.avatar}
+                            alt={comment.name}
+                          />
+                          <AvatarFallback>{comment.name[0]}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-semibold">
+                              {comment.name}
+                            </span>
+                            <span className="text-xs text-muted-foreground">
+                              {comment.date}
+                            </span>
+                          </div>
+                          <p className="text-sm mt-1">{comment.text}</p>
+                          <button className="text-xs text-primary mt-2 font-medium hover:underline w-fit">
+                            Reply
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Réponses (Replies) */}
+                      {comment.replies.length > 0 && (
+                        <div className="ml-11 flex flex-col gap-4 border-l-2 pl-4">
+                          {comment.replies.map((reply) => (
+                            <div
+                              key={reply.id}
+                              className="flex items-start gap-3"
+                            >
+                              <Avatar className="h-6 w-6">
+                                <AvatarImage
+                                  src={reply.avatar}
+                                  alt={reply.name}
+                                />
+                                <AvatarFallback>{reply.name[0]}</AvatarFallback>
+                              </Avatar>
+                              <div className="flex flex-col">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-sm font-semibold italic">
+                                    {reply.name} (Organizer)
+                                  </span>
+                                  <span className="text-xs text-muted-foreground">
+                                    {reply.date}
+                                  </span>
+                                </div>
+                                <p className="text-sm mt-1 text-muted-foreground">
+                                  {reply.text}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            {/* right section */}
+          </div>
+          {/* right section  */}
+          <div className="flex flex-col  gap-4 bg-white w-1/4 p-2 shadow rounded">
+            <header className="flex justify-between items-center">
+              <p className="text-primary">$10.96</p>
+              <p className="text-muted-foreground">Standard entry</p>
+            </header>
+            <p className="text-muted-foreground text-left text-sm">
+              Price includes all-day sessions, networking lunch, and exclusive
+              digital resources.
+            </p>
+            <div className="flex flex-col gap-3">
+              <div className="flex-1">
+                <p className="text-muted-foregroud">42 spot left</p>
+                <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                  <div
+                    className="bg-primary h-2 rounded-full"
+                    style={{ width: "70%" }}
+                  ></div>
+                </div>
+              </div>
+              <Button className="w-full">Get Tickets</Button>
+              <Button variant="outline" className="w-full">
+                Add to Calendar
+              </Button>
             </div>
           </div>
         </div>
       </section>
+
+      <FooterClient />
     </div>
   );
 }

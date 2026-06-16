@@ -2,7 +2,7 @@ import React from "react";
 
 function FooterClient() {
   return (
-    <footer className="bg-[#DAE2FD] sticky bottom-0 w-full  px-6 py-12">
+    <footer className="bg-[#DAE2FD] w-full px-6 py-12">
       <div className="container mx-auto flex flex-col gap-5  px-4">
         <p className="text-xl font-bold">Event Sphere</p>
         <div className="flex justify-between items-center">
