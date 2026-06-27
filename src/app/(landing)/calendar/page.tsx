@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import FoulPartyImage from "@/assets/tommorow-land.png";
 import Image from "next/image";
 import {
@@ -25,11 +27,114 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+type CommentNode = {
+  id: number;
+  name: string;
+  avatar: string;
+  date: string;
+  text: string;
+  replies: CommentNode[];
+};
+
+type CommentThreadProps = {
+  comment: CommentNode;
+  depth?: number;
+  activeReplyId: number | null;
+  replyText: string;
+  setReplyText: (value: string) => void;
+  onReplyStart: (commentId: number) => void;
+  onCancelReply: () => void;
+  onSubmitReply: (parentId: number) => void;
+};
+
+function CommentThread({
+  comment,
+  depth = 0,
+  activeReplyId,
+  replyText,
+  setReplyText,
+  onReplyStart,
+  onCancelReply,
+  onSubmitReply,
+}: CommentThreadProps) {
+  return (
+    <div className="flex flex-col gap-3 bg-white/90 p-3">
+      <div className="flex items-start gap-3">
+        <Avatar className={depth > 0 ? "h-7 w-7" : "h-8 w-8"}>
+          <AvatarImage src={comment.avatar} alt={comment.name} />
+          <AvatarFallback>{comment.name[0]}</AvatarFallback>
+        </Avatar>
+        <div className="flex flex-col flex-1">
+          <div className="flex items-center gap-2">
+            <span
+              className={`font-semibold ${depth > 0 ? "text-sm" : "text-sm"}`}
+            >
+              {comment.name}
+            </span>
+            <span className="text-xs text-muted-foreground">
+              {comment.date}
+            </span>
+          </div>
+          <p className="text-sm mt-1 leading-6">{comment.text}</p>
+          <button
+            type="button"
+            className="text-xs text-primary mt-2 font-medium hover:underline w-fit"
+            onClick={() => onReplyStart(comment.id)}
+          >
+            Reply
+          </button>
+
+          {activeReplyId === comment.id && (
+            <div className="mt-2 flex flex-col items-end gap-2 w-full">
+              <Textarea
+                value={replyText}
+                onChange={(event) => setReplyText(event.target.value)}
+                placeholder={`Reply to ${comment.name}`}
+              />
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  className="px-4 py-2"
+                  onClick={onCancelReply}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="button"
+                  className="px-4 py-2"
+                  onClick={() => onSubmitReply(comment.id)}
+                >
+                  Post reply
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {comment.replies.length > 0 && (
+        <div className="flex flex-col gap-4">
+          {comment.replies.map((reply) => (
+            <CommentThread
+              key={reply.id}
+              comment={reply}
+              depth={depth >= 1 ? 1 : depth + 1}
+              activeReplyId={activeReplyId}
+              replyText={replyText}
+              setReplyText={setReplyText}
+              onReplyStart={onReplyStart}
+              onCancelReply={onCancelReply}
+              onSubmitReply={onSubmitReply}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function CalendarPage() {
-  {
-    /* mock data comment  */
-  }
-  const comments = [
+  const initialComments: CommentNode[] = [
     {
       id: 1,
       name: "Alex Johnson",
@@ -43,6 +148,16 @@ function CalendarPage() {
           avatar: "https://github.com/shadcn.png",
           date: "1 day ago",
           text: "We're excited to have you! The schedule is fully packed with surprises.",
+          replies: [
+            {
+              id: 102,
+              name: "Alex Johnson",
+              avatar: "https://github.com/shadcn.png",
+              date: "30 min ago",
+              text: "Thanks! I’m looking forward to it too.",
+              replies: [],
+            },
+          ],
         },
       ],
     },
@@ -63,6 +178,48 @@ function CalendarPage() {
       replies: [],
     },
   ];
+
+  const [comments, setComments] = useState<CommentNode[]>(initialComments);
+  const [activeReplyId, setActiveReplyId] = useState<number | null>(null);
+  const [replyText, setReplyText] = useState("");
+
+  const addReplyToComment = (
+    items: CommentNode[],
+    targetId: number,
+    newReply: CommentNode,
+  ): CommentNode[] =>
+    items.map((item) => {
+      if (item.id === targetId) {
+        return { ...item, replies: [...item.replies, newReply] };
+      }
+
+      if (item.replies.length > 0) {
+        return {
+          ...item,
+          replies: addReplyToComment(item.replies, targetId, newReply),
+        };
+      }
+
+      return item;
+    });
+
+  const handleSubmitReply = (parentId: number) => {
+    const trimmed = replyText.trim();
+    if (!trimmed) return;
+
+    const newReply: CommentNode = {
+      id: Date.now() + Math.floor(Math.random() * 1000),
+      name: "You",
+      avatar: "https://github.com/shadcn.png",
+      date: "just now",
+      text: trimmed,
+      replies: [],
+    };
+
+    setComments((prev) => addReplyToComment(prev, parentId, newReply));
+    setReplyText("");
+    setActiveReplyId(null);
+  };
 
   return (
     <div className="flex flex-col min-h-screen overflow-x-hidden bg-[#FAF8FF]">
@@ -102,13 +259,16 @@ function CalendarPage() {
         </div>
       </section>
 
-      <section className="flex flex-col  items-center px-6 py-12 mb-14">
-        <div className="flex flex-row gap-3 text-center w-full max-w-7xl">
+      <section className="flex flex-col items-center px-4 py-8 md:px-6 md:py-12 mb-14">
+        <div className="flex flex-col md:flex-row md:flex-wrap lg:flex-row lg:flex-nowrap lg:items-start gap-4 md:gap-6 w-full max-w-7xl">
           {/* left section */}
-          <div className="flex flex-col  gap-4 w-3/4">
-            <div className="flex justify-between text-center w items-center w-full">
-              <Card size="sm" className="mx-auto w-48 max-w-sm">
-                <CardHeader className="flex flex-row items-center justify-between">
+          <div className="flex flex-col gap-4 w-full md:w-full lg:w-[65%]">
+            <div className="flex flex-wrap gap-2 items-stretch w-full md:*:flex-1 md:*:min-w-55 lg:*:flex-none">
+              <Card
+                size="sm"
+                className="w-full sm:w-[48%] xl:w-[32%] max-w-none"
+              >
+                <CardHeader className="flex flex-row items-center md:justify-center gap-3">
                   <Calendar1 className="h-5 w-5 text-primary" />
                   <div className="flex items-start flex-col">
                     <CardTitle className="uppercase">Date</CardTitle>
@@ -116,8 +276,11 @@ function CalendarPage() {
                   </div>
                 </CardHeader>
               </Card>
-              <Card size="sm" className="mx-auto w-48 max-w-sm">
-                <CardHeader className="flex flex-row items-center justify-between">
+              <Card
+                size="sm"
+                className="w-full sm:w-[48%] xl:w-[32%] max-w-none"
+              >
+                <CardHeader className="flex flex-row items-center md:justify-center">
                   <Timer className="h-5 w-5 text-primary" />
                   <div className="flex items-start flex-col">
                     <CardTitle className="uppercase">Time</CardTitle>
@@ -125,8 +288,11 @@ function CalendarPage() {
                   </div>
                 </CardHeader>
               </Card>
-              <Card size="sm" className="mx-auto w-48 max-w-sm">
-                <CardHeader className="flex flex-row items-center justify-between">
+              <Card
+                size="sm"
+                className="w-full sm:w-[48%] xl:w-[32%] max-w-none"
+              >
+                <CardHeader className="flex flex-row items-center md:justify-center">
                   <MapPin className="h-5 w-5 text-primary" />
                   <div className="flex items-start flex-col">
                     <CardTitle className="uppercase">LOCATION</CardTitle>
@@ -196,72 +362,29 @@ function CalendarPage() {
                 {/* Liste des commentaires */}
                 <div className="mt-8 flex flex-col gap-6 w-full">
                   {comments.map((comment) => (
-                    <div key={comment.id} className="flex flex-col gap-4">
-                      <div className="flex items-start gap-3">
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage
-                            src={comment.avatar}
-                            alt={comment.name}
-                          />
-                          <AvatarFallback>{comment.name[0]}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-semibold">
-                              {comment.name}
-                            </span>
-                            <span className="text-xs text-muted-foreground">
-                              {comment.date}
-                            </span>
-                          </div>
-                          <p className="text-sm mt-1">{comment.text}</p>
-                          <button className="text-xs text-primary mt-2 font-medium hover:underline w-fit">
-                            Reply
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Réponses (Replies) */}
-                      {comment.replies.length > 0 && (
-                        <div className="ml-11 flex flex-col gap-4 border-l-2 pl-4">
-                          {comment.replies.map((reply) => (
-                            <div
-                              key={reply.id}
-                              className="flex items-start gap-3"
-                            >
-                              <Avatar className="h-6 w-6">
-                                <AvatarImage
-                                  src={reply.avatar}
-                                  alt={reply.name}
-                                />
-                                <AvatarFallback>{reply.name[0]}</AvatarFallback>
-                              </Avatar>
-                              <div className="flex flex-col">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-sm font-semibold italic">
-                                    {reply.name} (Organizer)
-                                  </span>
-                                  <span className="text-xs text-muted-foreground">
-                                    {reply.date}
-                                  </span>
-                                </div>
-                                <p className="text-sm mt-1 text-muted-foreground">
-                                  {reply.text}
-                                </p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
+                    <CommentThread
+                      key={comment.id}
+                      comment={comment}
+                      activeReplyId={activeReplyId}
+                      replyText={replyText}
+                      setReplyText={setReplyText}
+                      onReplyStart={(commentId) => {
+                        setActiveReplyId(commentId);
+                        setReplyText("");
+                      }}
+                      onCancelReply={() => {
+                        setActiveReplyId(null);
+                        setReplyText("");
+                      }}
+                      onSubmitReply={handleSubmitReply}
+                    />
                   ))}
                 </div>
               </div>
             </div>
-            {/* right section */}
           </div>
           {/* right section  */}
-          <div className="flex flex-col max-h-100 gap-6 bg-white w-1/4 p-2 shadow rounded-xl">
+          <div className="flex flex-col gap-6 bg-white w-full md:w-full lg:w-[35%] p-4 md:p-6 shadow rounded-xl self-start">
             <header className="flex justify-between items-center">
               <p className="text-primary">$10.96</p>
               <p className="text-muted-foreground">Standard entry</p>

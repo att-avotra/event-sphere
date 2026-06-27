@@ -11,17 +11,17 @@ export default function Header() {
   const pathname = usePathname();
   return (
     <header className="sticky top-0 w-full z-50 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-      <div className="container mx-auto flex h-16 items-center px-4">
+      <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2">
           <span className="text-primary font-extrabold text-2xl">
             Event Sphere
           </span>
         </Link>
-        <nav className="hidden md:flex items-center gap-8 ml-10">
+
+        <nav className="hidden lg:flex items-center gap-8">
           <Link
             href="/"
             className={`text-sm font-medium ${pathname === "/" ? "text-primary font-bold border-b-2 border-primary" : "hover:text-primary"} transition-colors`}
-            // className="text-sm font-medium hover:text-primary transition-colors"
           >
             Explorer
           </Link>
@@ -46,12 +46,15 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-3 ml-auto">
-          <Button variant="ghost" asChild>
-            <Link href="/">Se connecter</Link>
-          </Button>
-          <Button asChild className="hidden md:inline-flex">
-            <Link href="/">Créer un événement</Link>
-          </Button>
+          <div className="hidden lg:flex items-center gap-3">
+            <Button variant="ghost" asChild>
+              <Link href="/login">Se connecter</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/register">Créer un événement</Link>
+            </Button>
+          </div>
+
           <Avatar>
             <AvatarImage
               src="https://github.com/shadcn.png"
@@ -61,20 +64,22 @@ export default function Header() {
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
 
-          {/* Menu Mobile */}
           <Sheet>
-            <SheetTrigger asChild className="md:hidden">
+            <SheetTrigger asChild className="lg:hidden">
               <Button variant="ghost" size="icon">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
             <SheetContent side="right">
               <div className="flex flex-col gap-6 mt-10">
-                <Link href="/blog" className="text-lg font-medium">
-                  Blog
+                <Link href="/" className="text-lg font-medium">
+                  Explorer
                 </Link>
-                <Link href="/docs" className="text-lg font-medium">
-                  Documentation
+                <Link href="/calendar" className="text-lg font-medium">
+                  Calendrier
+                </Link>
+                <Link href="/price" className="text-lg font-medium">
+                  Prix
                 </Link>
                 <Link href="/about" className="text-lg font-medium">
                   À propos
@@ -85,7 +90,7 @@ export default function Header() {
                     <Link href="/login">Se connecter</Link>
                   </Button>
                   <Button asChild>
-                    <Link href="/register">Commencer</Link>
+                    <Link href="/register">Créer un événement</Link>
                   </Button>
                 </div>
               </div>
